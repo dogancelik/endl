@@ -7,22 +7,13 @@ A program for extracting links from web pages and downloading them.
 
 **Every version under 1.0 is beta. This means it has bugs and features can change.**
 
-You can install it with npm:
-
+## How to install?
 [![NPM](https://nodei.co/npm/endl.png?mini=true)](https://nodei.co/npm/endl/)
 
-Then you can `endl` from anywhere.
+*endl* has a command line shortcut!
 
 ## How do you pronounce *endl*?
 Like *Handel* the composer, but without the *h* → *andel* :)
-
-Alternative names for *endl* are:
-* *lendl* (Link Extractor and Downloader)
-* *glendl* (Great Link Extractor and Downloader)
-* *edle* (Extractor, Downloader, Executer)
-* *ledle* (Link Extractor, Downloader, Executer)
-
-If you have a better name, create a new issue because seriously, coming up with names is hard... :weary:
 
 ## Simple example
 This is written in [*CoffeeScript*](https://github.com/jashkenas/coffeescript).
@@ -71,7 +62,7 @@ If you do `download()` after *find* or *findXpath*, it will automatically downlo
 ### Example #2
 Downloads Lame for Windows and installs it silently.
 
-```cs
+```coffee
 extractor.load('http://lame.buanzo.org/')
   .find('a[href^="http://lame.buanzo.org/Lame_"]')
   .download(
@@ -79,14 +70,14 @@ extractor.load('http://lame.buanzo.org/')
     fileDirectory: './downloads'
     filenameMode: { urlBasename: true }
   )
-  .execute("/VERYSILENT /NORESTART /LOG")
+  .execute('/VERYSILENT /NORESTART /LOG')
 ```
 [Thanks to this blog for providing the arguments for silent install.](http://practicalschooltech.blogspot.com.tr/2013/11/silently-installing-audacity-and-lame.html)
 
 ### Example #3
 Downloads Request (NodeJS module) and change directory of ZIP to `request-master`, extract all JS files to `./unzip`.
 
-```cs
+```coffee
 endl.file('https://github.com/request/request/archive/master.zip')
   .download(pageUrlAsReferrer: true, filenameMode: { contentDisposition: true })
   .extract(to: './unzip', cd: 'request-master', fileGlob: '*.js', maintainEntryPath: false)
@@ -126,43 +117,7 @@ This example will download multiple files. It will extract the first item. It wi
 ```
 endl d "http://www.mp3tag.de/en/download.html" "div.download a"
 ```
+[Also check out Command Line page from Wiki](https://github.com/dogancelik/endl/wiki/Command-Line)
 
 ## API
-### extactor.load(url)
-
-**Returns**: *extractorInstance*
-
-### *extractorInstance*
-
-| Function name | Returns | Info |
-| --- | --- | --- |
-| find(*query*, *options*) | *containerInstance* | Same as *querySelectorAll* |
-| findXpath(*query*, *options*) | *containerInstance* | Same as *evaluate* |
-
-### *containerInstance*
-
-| Function name | Returns | Info |
-| --- | --- | --- |
-| load(*attrName*, *options*) | *extractorInstance* | Creates an *extractorInstance* of `href()` or *attrName* of the container |
-| attr(*attrName*) | *attrInstance* | Select the attribute of the element |
-| href() | *attrInstance* | Shortcut for `attr('href')` |
-| index(*index*) | *containerInstance* | Selects an element from the array (if there is an array) |
-| download(*options*) | *fileInstance* | Shortcut for `href().download()` |
-
-**Notice:** It can contain more than one element, use `attr()`, `href()`, `download()` wisely. If you use `attr('href')` in a 10-element container, it will select the first element's *href*.
-
-### *attrInstance*
-
-| Function name | Returns | Info |
-| --- | --- | --- |
-| load(*options*) | *extractorInstance* | Creates an *extractorInstance* of *attrInstance*'s value  |
-| download(*options*) | *fileInstance* | Creates a *fileInstance* and downloads the link |
-
-### *fileInstance*
-
-| Function name | Returns | Info |
-| --- | --- | --- |
-| download(*options*) | *fileInstance* | Creates a *fileInstance* and downloads the link |
-| extract(*options*) | *fileInstance* | Extracts a ZIP file |
-| unzip(*options*) | *fileInstance* | Alias for `extract()` |
-| execute(*options*) | *fileInstance* | Executes the file |
+[Check endl's API page](https://github.com/dogancelik/endl/wiki/API)
