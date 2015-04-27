@@ -1,6 +1,6 @@
 {
   "name": "endl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Link extractor, downloader, executer, unzipper",
   "author": {
     "name": "Doğan Çelik",
@@ -13,6 +13,7 @@
     "executer",
     "unzipper"
   ],
+  "preferGlobal": true,
   "main": "lib/index.js",
   "bin": {
     "endl": "bin/endl.js"
