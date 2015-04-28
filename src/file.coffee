@@ -113,23 +113,21 @@ class File
 
         options = _extend(defaultOptions, options)
 
-        cdRegexSuffix = '([^\\\/\\\\]+(\\\/|\\\\))' # select everything until seperator including seperator
+        cdRegexSuffix = '([^\\\/\\\\]*(\\\/|\\\\))' # select everything until seperator including seperator
         cdRegex = null # keep it seperate from options
         if typeof options.cd is 'string' or typeof options.cdRegex is 'string'
-          entries = entries.filter (entry) ->
-            if typeof options.cd is 'string'
-              cdRegex = new RegExp("^#{options.cd}#{cdRegexSuffix}")
-            else if typeof options.cdRegex is 'string'
-              cdRegex = new RegExp("#{options.cdRegex}#{cdRegexSuffix}")
+          if typeof options.cd is 'string'
+            cdRegex = new RegExp("^#{options.cd}#{cdRegexSuffix}")
+          else if typeof options.cdRegex is 'string'
+            cdRegex = new RegExp("#{options.cdRegex}#{cdRegexSuffix}")
 
+          entries = entries.filter (entry) ->
             if cdRegex? then cdRegex.test entry.entryName else true
 
         if typeof options.fileGlob is 'string'
           entries = entries.filter (entry) ->
-            console.log entry.name, options.fileGlob
             minimatch(entry.name, options.fileGlob)
 
-        console.log "entries", entries.length
         entries.forEach (entry) ->
           fromPath = entry.entryName
 
@@ -143,14 +141,18 @@ class File
           else
             toPath = options.to
 
-          console.log("from", fromPath, "to", toPath)
           zip.extractEntryTo(fromPath, toPath, false, options.overwrite)
 
   execute: (options) ->
     @_req.on 'end', =>
       @_stream.on 'finish', =>
-        options = options ? {}
-        args = options.args ? null
+        if options instanceof Array
+          args = options
+          options = {}
+        else if typeof options == 'object'
+          args = options.args if options.hasOwnProperty('args')
+        else
+          options = options ? {}
         delete options.args
         execFile(@_file, args, options)
 

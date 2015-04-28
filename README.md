@@ -10,6 +10,8 @@ A program for extracting links from web pages and downloading them.
 ## How to install?
 [![NPM](https://nodei.co/npm/endl.png?mini=true)](https://nodei.co/npm/endl/)
 
+Prerequisites: Tools for building NodeJS native modules
+
 *endl* has a command line shortcut!
 
 ## How do you pronounce *endl*?
@@ -70,7 +72,7 @@ extractor.load('http://lame.buanzo.org/')
     fileDirectory: './downloads'
     filenameMode: { urlBasename: true }
   )
-  .execute('/VERYSILENT /NORESTART /LOG')
+  .execute(['/VERYSILENT', '/NORESTART', '/LOG'])
 ```
 [Thanks to this blog for providing the arguments for silent install.](http://practicalschooltech.blogspot.com.tr/2013/11/silently-installing-audacity-and-lame.html)
 
@@ -113,11 +115,22 @@ This example will download multiple files. It will extract the first item. It wi
 ]
 ```
 
+To use CSON in *endl* (if your CSON filename is `test.cson`):
+```
+endl l test.cson
+```
+or in `.js` or `.coffee` script:
+```coffee
+endl = require 'endl'
+
+endl.parse('test.cson')
+```
+
 ### Command Line
 ```
 endl d "http://www.mp3tag.de/en/download.html" "div.download a"
 ```
-[Also check out Command Line page from Wiki](https://github.com/dogancelik/endl/wiki/Command-Line)
+[More about Command Line](https://github.com/dogancelik/endl/wiki/Command-Line)
 
 ## API
-[Check endl's API page](https://github.com/dogancelik/endl/wiki/API)
+[Go to API page](https://github.com/dogancelik/endl/wiki/API)

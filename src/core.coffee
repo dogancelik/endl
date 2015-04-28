@@ -22,6 +22,10 @@ Core = {
       headers: options.headers
     })
     new Extractor(url, scraper)
+
+  file: (url, pageUrl) -> new (require('./file'))(url, pageUrl)
+
+  parse: (filepath) -> (new (require('./parser'))(filepath)).parse()
 }
 
 module.exports = Core
