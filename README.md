@@ -1,4 +1,4 @@
-# *endl* (Link Extractor and Downloader)
+# *endl* (Link Extractor and Downloader) [![Build Status](https://travis-ci.org/dogancelik/endl.svg?branch=master)](https://travis-ci.org/dogancelik/endl)
 A program for extracting links from web pages and downloading them.
 
 [![NPM](https://nodei.co/npm/endl.png?downloads=true&stars=true)](https://nodei.co/npm/endl/)
