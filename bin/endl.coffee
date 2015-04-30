@@ -106,7 +106,7 @@ else
   downloadOptions.filenameMode['predefined'] = argv.f
 
 if command[0] == 'd'
-  file = (endl.load(url)[if useCheerio then 'find' else 'findXpath'])(find).attr(attr).download(downloadOptions)
+  file = (endl.page(url)[if useCheerio then 'find' else 'findXpath'])(find).attr(attr).download(downloadOptions)
 
 if command == 'de'
   execOptions = {
@@ -125,4 +125,4 @@ else if command == 'dx'
 
   file.extract(extractOptions)
 else if command = 'l'
-  endl.parse(url)
+  endl.load(url)

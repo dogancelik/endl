@@ -1,10 +1,10 @@
+Core = require './core'
 CSON = require 'CSON'
-that = {}
+that = {} # so I can do: that['parseJSONFile'](...)
 that.parseJSONFile = CSON.parseJSONFile
 that.parseCSONFile = CSON.parseCSONFile
-{ extname } = require 'path'
+{ extname, join } = require 'path'
 { FindType } = require './extractor'
-{ join } = require 'path'
 
 class OnParser # Object notation parser, type agnostic
   _parse: ->
@@ -26,8 +26,7 @@ class OnParser # Object notation parser, type agnostic
     execute = item.execute ? false
     extract = item.extract ? false
 
-    endl = require '../index'
-    containerInstance = endl.load(url).find(find)
+    containerInstance = Core.page(url).find(find)
 
     if findIndex != 0
       containerInstance = containerInstance.index(findIndex)

@@ -13,20 +13,22 @@ FindType = {
 class Extractor
   constructor: (@_url, @_scraper) ->
 
-  find: (query) ->
+  find: (query, callback) ->
     container = new Container(@_url, @_scraper, FindType.cheerio)
 
     done = false
     @_scraper.scrape(
       ($) ->
         container._find = $(query)
-      , -> done = true
+      , ->
+        done = true
+        if typeof callback == 'function' then callback(container)
     )
     while !done then deasync.runLoopOnce()
 
     container
 
-  findXpath: (query) ->
+  findXpath: (query, callback) ->
     container = new Container(@_url, @_scraper, FindType.xpath)
 
     done = false
@@ -36,7 +38,9 @@ class Extractor
         console.log "doc", doc
         nodes = xpath.select(query, doc)
         container._find = nodes
-      , -> done = true
+      , ->
+        done = true
+        if typeof callback == 'function' then callback(container)
     )
     while !done then deasync.runLoopOnce()
 

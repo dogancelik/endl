@@ -1,22 +1,25 @@
 mime = require 'mime'
-{ parse } = require 'url'
-{ normalize, dirname, basename, extname, join } = require 'path'
+url = require 'url'
+{ parse } = url
+path = require 'path'
+{ normalize, dirname, basename, extname, join } = path
 { _extend } = require 'util'
-{ createWriteStream, statSync } = require 'fs'
+{ createWriteStream, stat } = require 'fs'
 sanitize = require 'sanitize-filename'
-request = require 'request'
 mkdirp = require 'mkdirp'
 deasync = require 'deasync'
 { execFile } = require 'child_process'
 Zip = require 'adm-zip'
 minimatch = require 'minimatch'
-
+needle = require 'needle'
+{ runLoopOnce } = require 'deasync'
 
 class File
   constructor: (@_url, @_pageUrl) ->
 
-  download: (options) ->
-    url = @_url
+  download: (options, callback) ->
+    thisClass = @
+    downloadUrl = @_url
     type = typeof options
 
     defaultOptions = {
@@ -28,15 +31,15 @@ class File
         contentType: false
         predefined: false
         redirect: false
-      fileDirectory: ''
+      directory: ''
     }
 
-    if type is 'string'
+    if type == 'string'
       options = {
         filenameMode:
           predefined: options
       }
-    else if type is 'object' and Object.keys(options).length is 0
+    else if type == 'object' and Object.keys(options).length == 0
       options = {
         filenameMode:
           urlBasename: true
@@ -47,115 +50,133 @@ class File
     if typeof options.filenameMode.predefined is 'string'
       filename = sanitize(options.filenameMode.predefined)
     else if options.filenameMode.urlBasename == true
-      filename = basename(parse(url).pathname)
+      filename = basename(parse(downloadUrl).pathname)
     # else if options.filenameMode.contentDisposition is true
 
     downloadOptions = {
-      url: url
       headers: options.headers
+      follow_max: 10
     }
 
+    if downloadUrl[0] == '/' and @_pageUrl.length > 0 # url doesn't have domain
+      domain = url.resolve(@_pageUrl, '/').replace(/\/$/, '')
+      downloadUrl = domain + downloadUrl
+
     if options.pageUrlAsReferrer is true
-      downloadOptions.headers.referer = @_pageUrl
+      downloadOptions.headers.referer = if @_pageUrl then @_pageUrl else downloadUrl # good choice? prob not
 
-    @_req = request(downloadOptions)
+    downloadCallback = (err, response) ->
+      throw err if err
 
-    @_req.on('response', (response) =>
-        contentType = response.headers['content-type']
-        if contentType?
-          extension = mime.extension(contentType)
-          extension = ".#{extension}"
+      contentType = response.headers['content-type']
+      if contentType?
+        extension = mime.extension(contentType)
+        extension = ".#{extension}"
 
-        # If filename has not extension same as contentType extension, add contentType extension if contentType is enabled
-        if options.filenameMode.urlBasename == true and
-          options.filenameMode.contentType == true and
-          extension != extname(filename)
-            filename += extension
+      # If filename has not extension same as contentType extension, add contentType extension if contentType is enabled
+      if options.filenameMode.urlBasename == true and
+        options.filenameMode.contentType == true and
+        extension != extname(filename)
+          filename += extension
 
-        # If contentDisposition is enabled, check contentDisposition
-        # If there is a filename, use that filename
-        contentDisposition = response.headers['content-disposition']
-        if options.filenameMode.contentDisposition == true and contentDisposition?
-          cdFilename = contentDisposition.split('filename=')[1].replace(/"/g, '')
-          if cdFilename.length > 0 then filename = sanitize(cdFilename)
+      # If contentDisposition is enabled, check contentDisposition
+      # If there is a filename, use that filename
+      contentDisposition = response.headers['content-disposition']
+      if options.filenameMode.contentDisposition == true and contentDisposition?
+        cdFilename = contentDisposition.split('filename=')[1].replace(/"/g, '')
+        if cdFilename.length > 0 then filename = sanitize(cdFilename)
 
-        try
-          statSync(options.fileDirectory)
-        catch e
-          if e.code == 'ENOENT'
-            done = false
-            mkdirp options.fileDirectory, -> done = true
-            while !done then deasync.runLoopOnce()
+      if !filename? then throw new Error('File name is not defined')
 
-        if !filename? then throw new Error("File name is not defined")
+      # to do stat on empty directory string, you need to resolve first
+      options.directory = path.resolve options.directory
 
-        @_file = join options.fileDirectory, filename
-        @_stream = createWriteStream @_file
-        @_req.pipe @_stream
-      )
+      thisClass._file = join options.directory, filename
 
+      callbackData = {
+        url: downloadUrl
+        file: thisClass._file
+      }
+
+      startDownload = ->
+        thisClass._stream = createWriteStream thisClass._file
+        thisClass._stream.on 'finish', -> callback(callbackData) if typeof callback == 'function'
+        thisClass._stream.end response.raw
+
+      stat options.directory, (err, stats) ->
+        if err and err.code == 'ENOENT'
+          mkdirp options.directory, -> startDownload()
+        if not err
+          startDownload()
+        else
+          throw err
+
+    @_req = needle.get(downloadUrl, downloadOptions, downloadCallback)
     @
 
-  extract: (options) ->
-    @_req.on 'end', =>
-      @_stream.on 'finish', =>
-        zip = new Zip(@_file)
-        entries = zip.getEntries()
+  extract: (options, callback) ->
+    while !@_stream then runLoopOnce()
+    @_stream.on 'finish', =>
+      zip = new Zip(@_file)
+      entries = zip.getEntries()
 
-        defaultOptions = {
-          to: ''
-          cd: false
-          cdRegex: false
-          fileGlob: false
-          maintainEntryPath: true
-          overwrite: true
-        }
+      defaultOptions = {
+        to: ''
+        cd: false
+        cdRegex: false
+        fileGlob: false
+        maintainEntryPath: true
+        overwrite: true
+      }
 
-        options = _extend(defaultOptions, options)
+      options = _extend(defaultOptions, options)
 
-        cdRegexSuffix = '([^\\\/\\\\]*(\\\/|\\\\))' # select everything until seperator including seperator
-        cdRegex = null # keep it seperate from options
-        if typeof options.cd is 'string' or typeof options.cdRegex is 'string'
-          if typeof options.cd is 'string'
-            cdRegex = new RegExp("^#{options.cd}#{cdRegexSuffix}")
-          else if typeof options.cdRegex is 'string'
-            cdRegex = new RegExp("#{options.cdRegex}#{cdRegexSuffix}")
+      cdRegexSuffix = '([^\\\/\\\\]*(\\\/|\\\\))' # select everything until seperator including seperator
+      cdRegex = null # keep it seperate from options
+      if typeof options.cd is 'string' or typeof options.cdRegex is 'string'
+        if typeof options.cd is 'string'
+          cdRegex = new RegExp("^#{options.cd}#{cdRegexSuffix}")
+        else if typeof options.cdRegex is 'string'
+          cdRegex = new RegExp("#{options.cdRegex}#{cdRegexSuffix}")
 
-          entries = entries.filter (entry) ->
-            if cdRegex? then cdRegex.test entry.entryName else true
+        entries = entries.filter (entry) ->
+          if cdRegex? then cdRegex.test entry.entryName else true
 
-        if typeof options.fileGlob is 'string'
-          entries = entries.filter (entry) ->
-            minimatch(entry.name, options.fileGlob)
+      if typeof options.fileGlob is 'string'
+        entries = entries.filter (entry) ->
+          minimatch(entry.name, options.fileGlob)
 
-        entries.forEach (entry) ->
-          fromPath = entry.entryName
+      extracted = []
 
-          if options.maintainEntryPath
-            targetDirname = dirname(entry.entryName)
+      entries.forEach (entry) ->
+        fromPath = entry.entryName
 
-            if cdRegex != null
-              targetDirname = targetDirname.replace(cdRegex, '')
+        if options.maintainEntryPath
+          targetDirname = dirname(entry.entryName)
 
-            toPath = join(options.to, targetDirname)
-          else
-            toPath = options.to
+          if cdRegex != null
+            targetDirname = targetDirname.replace(cdRegex, '')
 
-          zip.extractEntryTo(fromPath, toPath, false, options.overwrite)
+          toPath = join(options.to, targetDirname)
+        else
+          toPath = options.to
+
+        extracted.push {from: fromPath, to: toPath}
+        zip.extractEntryTo(fromPath, toPath, false, options.overwrite)
+
+      callback(extracted)
 
   execute: (options) ->
-    @_req.on 'end', =>
-      @_stream.on 'finish', =>
-        if options instanceof Array
-          args = options
-          options = {}
-        else if typeof options == 'object'
-          args = options.args if options.hasOwnProperty('args')
-        else
-          options = options ? {}
-        delete options.args
-        execFile(@_file, args, options)
-
-File::unzip = File::extract
+    while !@_stream then runLoopOnce()
+    @_stream.on 'finish', =>
+      if options instanceof Array
+        args = options
+        options = {}
+      else if typeof options == 'object'
+        args = options.args if options.hasOwnProperty('args')
+      else
+        options = options ? {}
+      delete options.args
+      execFile(@_file, args, options)
 
 module.exports = File

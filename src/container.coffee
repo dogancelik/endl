@@ -1,14 +1,15 @@
+Core = require './core'
 Attr = require './attr'
 that = this
 
 class Container
-  constructor: (@_url, @_scraper, @_findType) ->
+  constructor: (@_pageUrl, @_scraper, @_findType) ->
     @_index = 0
 
     extractor = require './extractor'
     that.FindType = extractor.FindType
 
-  load: (attrName, options) ->
+  page: (attrName, options) ->
     targetAttr = null
 
     if typeof attrName is 'object' # attrName is options, attrName assumed 'href'
@@ -20,7 +21,7 @@ class Container
 
     url = @_getAttr(targetAttr)
 
-    require('./core').load(url, targetOptions)
+    Core.page(url, targetOptions)
 
   _getAttr: (attrName) ->
     if @_findType is that.FindType.cheerio
@@ -33,7 +34,7 @@ class Container
 
   attr: (attrName) ->
     @_getAttr(attrName)
-    new Attr @_url, @_find, @_findType, @_attr
+    new Attr @_pageUrl, @_find, @_findType, @_attr
 
   href: (attrName) -> @attr('href')
 
@@ -47,7 +48,8 @@ class Container
     @_index = index
     @
 
-  download: (options) ->
-    @href().download(options)
+  download: ->
+    attrInstance = @href()
+    attrInstance.download.apply attrInstance, arguments
 
 module.exports = Container

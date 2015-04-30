@@ -1,4 +1,4 @@
-# *endl* (Extractor and Downloader) by Doğan Çelik
+# *endl* (Link Extractor and Downloader)
 A program for extracting links from web pages and downloading them.
 
 [![NPM](https://nodei.co/npm/endl.png?downloads=true&stars=true)](https://nodei.co/npm/endl/)
@@ -6,6 +6,11 @@ A program for extracting links from web pages and downloading them.
 *endl* has a very simple also an advanced API for link extracting, file downloading, executing and unzipping.
 
 **Every version under 1.0 is beta. This means it has bugs and features can change.**
+
+## Latest breaking changes
+* Changed `endl.load()` to `endl.page()`
+* Changed `endl.parse()` to `endl.load()`
+* Changed download option `fileDirectory` to `directory`
 
 ## How to install?
 [![NPM](https://nodei.co/npm/endl.png?mini=true)](https://nodei.co/npm/endl/)
@@ -23,10 +28,12 @@ This is written in [*CoffeeScript*](https://github.com/jashkenas/coffeescript).
 ```coffee
 endl = require 'endl'
 
-endl.load('http://lame.buanzo.org/')
+endl.page('http://lame.buanzo.org/')
   .find('a[href^="http://lame.buanzo.org/Lame_"]')
   .download(pageUrlAsReferrer: true, filenameMode: { urlBasename: true })
 ```
+
+[More examples here](https://github.com/dogancelik/endl/wiki/Examples)
 
 ### Explanation
 1. We *require* our *endl* module. (Node style)
@@ -43,94 +50,14 @@ Things to note:
 
 ## To-Do
 * Unify all downloading, extraction and execution options across submodules. (`endl.coffee`, `file.coffee`, `parser.coffee`) These 3 submodules have different *default* options for each task.
-* Add tests in this century.
-
-## More examples
-### Example #1
-Downloads PuTTY portable to the current directory.
-
-```coffee
-endl.load('http://portableapps.com/apps/internet/putty_portable')
-  .find('.sf-download a')
-  .load(pageUrlAsReferrer: true)
-  .find('.direct-download')
-  .download(pageUrlAsReferrer: true, filenameMode: { urlBasename: true })
-```
-
-If you do `load()` after *find* or *findXpath*, it will automatically load `href` attribute of the first element. (If you want to select another element, use `index()`)
-
-If you do `download()` after *find* or *findXpath*, it will automatically download `href` attribute of the first element.
-
-### Example #2
-Downloads Lame for Windows and installs it silently.
-
-```coffee
-extractor.load('http://lame.buanzo.org/')
-  .find('a[href^="http://lame.buanzo.org/Lame_"]')
-  .download(
-    pageUrlAsReferrer: true
-    fileDirectory: './downloads'
-    filenameMode: { urlBasename: true }
-  )
-  .execute(['/VERYSILENT', '/NORESTART', '/LOG'])
-```
-[Thanks to this blog for providing the arguments for silent install.](http://practicalschooltech.blogspot.com.tr/2013/11/silently-installing-audacity-and-lame.html)
-
-### Example #3
-Downloads Request (NodeJS module) and change directory of ZIP to `request-master`, extract all JS files to `./unzip`.
-
-```coffee
-endl.file('https://github.com/request/request/archive/master.zip')
-  .download(pageUrlAsReferrer: true, filenameMode: { contentDisposition: true })
-  .extract(to: './unzip', cd: 'request-master', fileGlob: '*.js', maintainEntryPath: false)
-```
-
-### CSON
-This is just an example, you can use *JSON* too.
-
-This example will download multiple files. It will extract the first item. It will install the second item.
-
-```cson
-[
-  {
-    url: 'http://www.mp3tag.de/en/download.html'
-    find: 'div.download a'
-    filenameMode: ['urlBasename', 'contentType']
-  }
-  {
-    url: 'http://slimerjs.org/download.html'
-    find: 'a.btn'
-    findIndex: 4,
-    filename: 'slimerjs.zip'
-    extract:
-      to: 'C:/slimerjs',
-      cdRegex: '^slimerjs'
-      fileGlob: '*.png'
-      maintainEntryPath: false
-  }
-  {
-    download: 'http://rammichael.com/downloads/7tt_setup.exe'
-    execute: ['/S']
-  }
-]
-```
-
-To use CSON in *endl* (if your CSON filename is `test.cson`):
-```
-endl l test.cson
-```
-or in `.js` or `.coffee` script:
-```coffee
-endl = require 'endl'
-
-endl.parse('test.cson')
-```
+* Add more tests.
+* Turn every blocking function into async (I'm using deasync in some places)
 
 ### Command Line
 ```
 endl d "http://www.mp3tag.de/en/download.html" "div.download a"
 ```
-[More about Command Line](https://github.com/dogancelik/endl/wiki/Command-Line)
+[More info about Command Line](https://github.com/dogancelik/endl/wiki/Command-Line)
 
 ## API
 [Go to API page](https://github.com/dogancelik/endl/wiki/API)

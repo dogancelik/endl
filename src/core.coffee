@@ -3,7 +3,7 @@ scraperjs = require 'scraperjs'
 { _extend } = require 'util'
 
 Core = {
-  load: (url, options) ->
+  page: (url, options) ->
     options = options ? {}
 
     defaultOptions = {
@@ -23,9 +23,11 @@ Core = {
     })
     new Extractor(url, scraper)
 
-  file: (url, pageUrl) -> new (require('./file'))(url, pageUrl)
+  file: (url, pageUrl) ->
+    new (require('./file'))(url, pageUrl)
 
-  parse: (filepath) -> (new (require('./parser'))(filepath)).parse()
+  load: (filepath) ->
+    (new (require('./parser'))(filepath)).parse()
 }
 
 module.exports = Core

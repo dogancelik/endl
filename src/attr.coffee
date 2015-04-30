@@ -2,18 +2,19 @@ Core = require './core'
 File = require './file'
 
 class Attr
-  constructor: (@_url, @_find, @_findType, @_attr) ->
+  constructor: (@_pageUrl, @_find, @_findType, @_attr) ->
     @_attr = @_attr.toString()
 
   value: -> @_attr
 
-  load: (options) ->
+  page: (options) ->
     url = @_attr
-    Core.load(url, options)
+    Core.page(url, options)
 
-  download: (options) ->
+  download: -> # don't use params here, use arguments instead because better compability
     url = @_attr
-    pageUrl = @_url
-    new File(url, pageUrl).download(options)
+    pageUrl = @_pageUrl
+    fileInstance = new File(url, pageUrl)
+    fileInstance.download.apply fileInstance, arguments
 
 module.exports = Attr
