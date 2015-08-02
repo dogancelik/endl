@@ -31,10 +31,7 @@ Things to note:
 * `download()` after `find()` is a shortcut. The long way is: *find(...)* → *href()* → *download(...)*
 
 ## Latest breaking changes
-* Removed CSON in *v0.3.0*
-* Changed `endl.load()` to `endl.page()` in *v0.2.0*
-* Changed `endl.parse()` to `endl.load()` in *v0.2.0*
-* Changed download option `fileDirectory` to `directory` in *v0.2.0*
+See [CHANGELOG.md](https://github.com/dogancelik/endl/blob/master/CHANGELOG.md)
 
 ## How to install?
 [![NPM](https://nodei.co/npm/endl.png?mini=true)](https://nodei.co/npm/endl/)

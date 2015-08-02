@@ -35,7 +35,6 @@ class Extractor
     @_scraper.scrape(
       =>
         doc = new DOMParser().parseFromString(@_scraper.scraper.body, "text/html")
-        console.log "doc", doc
         nodes = xpath.select(query, doc)
         container._find = nodes
       , ->
