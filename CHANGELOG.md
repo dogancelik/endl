@@ -3,6 +3,7 @@
 ## v0.4.0
 
 * Removed *deasync* dependency in File class. *extract()* and *execute()* (kinda) are now asynchronous.
+* *endl* uses *bhttp* instead of *needle*.
 
 ## v0.3.0
 
