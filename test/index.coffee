@@ -7,6 +7,7 @@ urls = [
   'http://dogancelik.com'
   'http://lame.buanzo.org/'
   'https://github.com/request/request/archive/master.zip'
+  'http://codecguide.com/download_k-lite_codec_pack_mega.htm'
 ]
 
 describe 'endl test #1', ->
@@ -46,3 +47,18 @@ describe 'endl test #3', ->
       .extract {to: join(tmpdir(), '/unzip'), cd: 'request-master', fileGlob: '*.js', maintainEntryPath: false}, (extracted) ->
         if extracted.length == 0 then throw new Error('Zip is empty?')
         done()
+
+describe 'endl test #4', ->
+
+  it 'should use previousUrl', (done) ->
+    endl.page(urls[3])
+      .find('a[href^="http://downloads.ddigest.com/software/download.php"]')
+      .page({ usePageUrlAsReferrer: true })
+      .find('a[href^="http://downloads.ddigest.com/software/getdownload.php?sid=1089"]',
+        (container) ->
+          referer = container._scraper.scraper.response.request.headers.referer
+          if referer == urls[3]
+            done()
+          else
+            throw new Error "Referrer is not initial URL: #{referer}"
+      )

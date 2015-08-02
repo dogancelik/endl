@@ -15,7 +15,10 @@ Core = {
     if options.usePageUrlAsReferrer is true
       if !options.headers?
         options.headers = {}
-      options.headers.referer = url
+      if options.hasOwnProperty('previousUrl')
+        options.headers.referer = options.previousUrl
+      else
+        options.headers.referer = url
 
     scraper = scraperjs.StaticScraper.create({
       url: options.url

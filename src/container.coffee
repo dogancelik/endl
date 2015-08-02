@@ -1,5 +1,5 @@
-Core = require './core'
 Attr = require './attr'
+{ _extend } = require 'util'
 that = this
 
 class Container
@@ -10,7 +10,8 @@ class Container
     that.FindType = extractor.FindType
 
   page: (attrName, options) ->
-    targetAttr = null
+    targetAttr = 'href'
+    targetOptions = {}
 
     if typeof attrName is 'object' # attrName is options, attrName assumed 'href'
       targetAttr = 'href'
@@ -20,14 +21,15 @@ class Container
       targetOptions = options
 
     url = @_getAttr(targetAttr)
+    targetOptions = _extend({ previousUrl: @_pageUrl }, targetOptions)
 
-    Core.page(url, targetOptions)
+    # to avoid circular dependency problem, we put here
+    require('./core').page(url, targetOptions)
 
   _getAttr: (attrName) ->
     if @_findType is that.FindType.cheerio
       @_attr = @_find[@_index].attribs[attrName]
     else if @_findType is that.FindType.xpath
-      console.log "xpath", @_find
       @_attr = @_find.attributes.getNamedItem(attrName).value
 
     @_attr

@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.0
+
+* Fixed few bugs in Container class; you can now use Container.page() without any arguments.
+* If usePageUrlAsReferrer is true (`endl.page()`), it will use previousUrl if previousUrl is defined in endl.page() otherwise it will use page URL.
+
 ## v0.4.0
 
 * Removed *deasync* dependency in File class. *extract()* and *execute()* (kinda) are now asynchronous.
