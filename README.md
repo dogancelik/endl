@@ -52,7 +52,7 @@ Like *Handel* the composer, but without the *h* → *andel* :)
 * Add more tests.
 * Turn every blocking function into async (I'm using deasync in some places)
 
-### Command Line
+## Command Line
 See [*endl-cli*](https://github.com/dogancelik/endl-cli)
 
 ## API
