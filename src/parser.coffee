@@ -1,9 +1,5 @@
 Core = require './core'
-CSON = require 'CSON'
-that = {} # so I can do: that['parseJSONFile'](...)
-that.parseJSONFile = CSON.parseJSONFile
-that.parseCSONFile = CSON.parseCSONFile
-{ extname, join } = require 'path'
+{ extname, join, isAbsolute } = require 'path'
 { FindType } = require './extractor'
 
 class OnParser # Object notation parser, type agnostic
@@ -59,14 +55,16 @@ class Parser extends OnParser
     if typeof @_filepath == 'object'
       @_obj = @_filepath
     else
+      @_realfilepath = if isAbsolute(@_filepath) then @_filepath else join(process.cwd(), @_filepath)
       @_ext = extname(@_filepath)
 
   parse: ->
-    if @_ext == '.json' or @_ext == '.cson'
-      @_obj = that[if @_ext == '.json' then 'parseJSONFile' else 'parseCSONFile'](@_filepath)
+    if @_ext == '.json'
+      @_obj = require(@_realfilepath)
       @_parse()
-    else if @_ext == '.js' or @_ext == '.coffee'
-      require(join(process.cwd(), @_filepath))
+    else if @_ext == '.yml'
+      @_obj = YAML.load(@_realfilepath)
+      @_parse()
     else if @_obj?
       @_parse()
 

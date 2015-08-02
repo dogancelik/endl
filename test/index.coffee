@@ -1,4 +1,5 @@
 { tmpdir } = require 'os'
+{ join } = require 'path'
 endl = require '../src/index'
 
 waitTime = 20000
@@ -42,6 +43,6 @@ describe 'endl test #3', ->
   it 'should download and unzip', (done) ->
     endl.file(urls[2])
       .download({pageUrlAsReferrer: true, filenameMode: { contentDisposition: true }, directory: tmpdir()})
-      .extract {to: './unzip', cd: 'request-master', fileGlob: '*.js', maintainEntryPath: false}, (extracted) ->
+      .extract {to: join(tmpdir(), '/unzip'), cd: 'request-master', fileGlob: '*.js', maintainEntryPath: false}, (extracted) ->
         if extracted.length == 0 then throw new Error('Zip is empty?')
         done()

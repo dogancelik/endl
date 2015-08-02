@@ -1,5 +1,5 @@
 # *endl* (Link Extractor and Downloader) [![Build Status](https://travis-ci.org/dogancelik/endl.svg?branch=master)](https://travis-ci.org/dogancelik/endl)
-A program for extracting links from web pages and downloading them.
+A Node.js module for extracting links from web pages and downloading them.
 
 [![NPM](https://nodei.co/npm/endl.png?downloads=true&stars=true)](https://nodei.co/npm/endl/)
 
@@ -21,7 +21,7 @@ endl.page('http://lame.buanzo.org/')
 [More examples here](https://github.com/dogancelik/endl/wiki/Examples)
 
 ### Explanation
-1. We *require* our *endl* module. (Node style)
+1. We *require* our *endl* module.
 2. `endl.page()` loads the page we want. (It takes two arguments, second argument is an options *object* and optional.)
 3. `find()` finds the elements we want. (Works just like jQuery and querySelectorAll)
 4. Download our file to the current directory, using basename of our download link for file name and using our page URL as *Referer* header.
@@ -31,16 +31,15 @@ Things to note:
 * `download()` after `find()` is a shortcut. The long way is: *find(...)* → *href()* → *download(...)*
 
 ## Latest breaking changes
-* Changed `endl.load()` to `endl.page()`
-* Changed `endl.parse()` to `endl.load()`
-* Changed download option `fileDirectory` to `directory`
+* Removed CSON in *v0.3.0*
+* Changed `endl.load()` to `endl.page()` in *v0.2.0*
+* Changed `endl.parse()` to `endl.load()` in *v0.2.0*
+* Changed download option `fileDirectory` to `directory` in *v0.2.0*
 
 ## How to install?
 [![NPM](https://nodei.co/npm/endl.png?mini=true)](https://nodei.co/npm/endl/)
 
 Prerequisites: Tools for building NodeJS native modules
-
-*endl* has a command line shortcut!
 
 ## How do you pronounce *endl*?
 Like *Handel* the composer, but without the *h* → *andel* :)
@@ -54,10 +53,7 @@ Like *Handel* the composer, but without the *h* → *andel* :)
 * Turn every blocking function into async (I'm using deasync in some places)
 
 ### Command Line
-```
-endl d "http://www.mp3tag.de/en/download.html" "div.download a"
-```
-[More info about Command Line](https://github.com/dogancelik/endl/wiki/Command-Line)
+See [*endl-cli*](https://github.com/dogancelik/endl-cli)
 
 ## API
 [Go to API page](https://github.com/dogancelik/endl/wiki/API)
