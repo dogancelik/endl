@@ -38,7 +38,8 @@ class File
   _getExtension: (contentType) ->
     if contentType?
       extension = mime.extension(contentType)
-      extension = ".#{extension}"
+      if extension?
+        extension = ".#{extension}"
     extension
 
   _getFilename: (initialUrl, options, response) ->
@@ -94,6 +95,7 @@ class File
       # If filename has not extension same as contentType extension, add contentType extension if contentType is enabled
       if options.filenameMode.urlBasename == true and
         options.filenameMode.contentType == true and
+        extension? and
         extension != extname(filename)
           filename += extension
 
