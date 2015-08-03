@@ -53,7 +53,7 @@ describe 'endl test #4', ->
   it 'should use previousUrl', (done) ->
     endl.page(urls[3])
       .find('a[href^="http://downloads.ddigest.com/software/download.php"]')
-      .page({ usePageUrlAsReferrer: true })
+      .page({ pageUrlAsReferrer: true })
       .find('a[href^="http://downloads.ddigest.com/software/getdownload.php?sid=1089"]',
         (container) ->
           referer = container._scraper.scraper.response.request.headers.referer

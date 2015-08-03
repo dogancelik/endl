@@ -12,7 +12,7 @@ Core = {
 
     options = _extend(defaultOptions, options)
 
-    if options.usePageUrlAsReferrer is true
+    if options.pageUrlAsReferrer is true
       if !options.headers?
         options.headers = {}
       if options.hasOwnProperty('previousUrl')

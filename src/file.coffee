@@ -49,6 +49,7 @@ class File
         filename = basename(parse(response.request.url).pathname) # Final URL after redirect
       else
         filename = basename(parse(initialUrl).pathname)
+      filename = decodeURIComponent(filename) # %20 -> space
     # else if options.filenameMode.contentDisposition is true
     filename
 
@@ -181,7 +182,7 @@ class File
       extracted.push {from: fromPath, to: toPath}
       zip.extractEntryTo(fromPath, toPath, false, options.overwrite)
 
-    callback(extracted)
+    callback(extracted) if typeof callback == 'function'
 
   extract: (options, callback) ->
     thisClass = @

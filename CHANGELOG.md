@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.0
+
+* *decodeURIComponent* is applied on file name when *urlBasename* is true.
+* *endl.page()* option *usePageUrlAsReferrer* is changed to *pageUrlAsReferrer* for consistency.
+* Fixed a bug where *extract()* would crash if no callback is provided.
+
 ## v0.5.0
 
 * Fixed few bugs in Container class; you can now use Container.page() without any arguments.
