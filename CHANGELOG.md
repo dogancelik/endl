@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.8.0
+
+* Completely removed *deasync* module.
+* *find()* and *findXpath()* uses *promises* now, thanks to *bluebird*. *Promise* will return *containerInstance*.
+
 ## v0.7.0
 
 * *endl.load()* now supports two callbacks, first callback is called when download is finished, second is called when extraction is finished.

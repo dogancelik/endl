@@ -27,8 +27,11 @@ describe 'endl test #1', ->
 
   it 'should download src', (done) ->
     extractorInstance = endl.page(urls[0])
-    attrInstance = extractorInstance.find('#gif').attr('src')
-    attrInstance.download {filenameMode: {predefined: 'gif.gif'}, directory: tmpdir()}, -> done()
+    containerPromise = extractorInstance.find('#gif')
+    containerPromise.then((container) ->
+      attrInstance = container.attr('src')
+      attrInstance.download {filenameMode: {predefined: 'gif.gif'}, directory: tmpdir()}, -> done()
+    )
 
 describe 'endl test #2', ->
   @timeout waitTime
@@ -36,7 +39,8 @@ describe 'endl test #2', ->
   it 'should download', (done) ->
     endl.page(urls[1])
       .find('a[href^="http://lame.buanzo.org/Lame_"]')
-      .download {pageUrlAsReferrer: true, directory: tmpdir(), filenameMode: { urlBasename: true }}, -> done()
+      .then (container) ->
+        container.download {pageUrlAsReferrer: true, directory: tmpdir(), filenameMode: { urlBasename: true }}, -> done()
 
 describe 'endl test #3', ->
   @timeout waitTime
@@ -53,15 +57,16 @@ describe 'endl test #4', ->
   it 'should use previousUrl', (done) ->
     endl.page(urls[3])
       .find('a[href^="http://www.majorgeeks.com/"]')
-      .page({ pageUrlAsReferrer: true })
-      .find('a[href*="getmirror/k_lite_mega_codec_pack"]',
-        (container) ->
-          referer = container._scraper.scraper.response.request.headers.referer
-          if referer == urls[3]
-            done()
-          else
-            throw new Error "Referrer is not initial URL: #{referer}"
-      )
+      .then (container) ->
+        container.page({ pageUrlAsReferrer: true })
+          .find('a[href*="getmirror/k_lite_mega_codec_pack"]',
+            (container) ->
+              referer = container._scraper.scraper.response.request.headers.referer
+              if referer == urls[3]
+                done()
+              else
+                throw new Error "Referrer is not initial URL: #{referer}"
+          )
 
 describe 'endl test #5', ->
   @timeout waitTime

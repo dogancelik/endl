@@ -57,35 +57,36 @@ class OnParser # Object notation parser, type agnostic
     execute = item.execute ? false
     extract = item.extract ? false
 
-    containerInstance = Core.page(url).find(find)
+    containerPromise = Core.page(url).find(find)
 
-    if findIndex != 0
-      containerInstance = containerInstance.index(findIndex)
+    containerPromise.then (containerInstance) =>
+      if findIndex != 0
+        containerInstance = containerInstance.index(findIndex)
 
-    if useText == true
-      attrInstance = containerInstance.text()
-    else
-      attrInstance = containerInstance.attr(attr)
+      if useText == true
+        attrInstance = containerInstance.text()
+      else
+        attrInstance = containerInstance.attr(attr)
 
-    downloadOptions = {}
-    downloadOptions.filenameMode = filenameMode
-    downloadOptions.directory = replaceVars(directory)
+      downloadOptions = {}
+      downloadOptions.filenameMode = filenameMode
+      downloadOptions.directory = replaceVars(directory)
 
-    [].concat(filenameMode).forEach (i) ->
-      downloadOptions.filenameMode[i] = true
+      [].concat(filenameMode).forEach (i) ->
+        downloadOptions.filenameMode[i] = true
 
-    if typeof filename == 'string'
-      downloadOptions.filenameMode['predefined'] = filename
+      if typeof filename == 'string'
+        downloadOptions.filenameMode['predefined'] = filename
 
-    fileInstance = attrInstance.download(downloadOptions, @_onDownload)
+      fileInstance = attrInstance.download(downloadOptions, @_onDownload)
 
-    if execute != false
-      fileInstance.execute(execute)
+      if execute != false
+        fileInstance.execute(execute)
 
-    if extract != false
-      if extract.to?
-        extract.to = replaceVars(extract.to)
-      fileInstance.extract(extract, @_onExtract)
+      if extract != false
+        if extract.to?
+          extract.to = replaceVars(extract.to)
+        fileInstance.extract(extract, @_onExtract)
 
 class Parser extends OnParser
   _getObj: (filepath) ->
