@@ -27,10 +27,12 @@ Core = {
     new Extractor(url, scraper)
 
   file: (url, pageUrl) ->
-    new (require('./file'))(url, pageUrl)
+    File = require './file'
+    new File(url, pageUrl)
 
-  load: (filepath) ->
-    (new (require('./parser'))(filepath)).parse()
+  load: (filepath, downloadCb, extractCb) ->
+    Parser = require './parser'
+    new Parser().onDownload(downloadCb).onExtract(extractCb).parse(filepath)
 }
 
 module.exports = Core

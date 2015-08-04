@@ -1,8 +1,42 @@
 Core = require './core'
-{ extname, join, isAbsolute } = require 'path'
+{ extname, join, isAbsolute, normalize } = require 'path'
 { FindType } = require './extractor'
+{ tmpdir } = require 'os'
+
+Vars = {
+  tmpdir: {
+    find: '%tmpdir%'
+    replace: tmpdir
+    after: normalize
+  }
+}
+
+createRegex = (str) ->
+  new RegExp(str, 'gi')
+
+replaceVars = (str) ->
+  oldStr = str
+  for key, item of Vars
+    if str.indexOf(item.find) > -1
+      # Not going to add any type checks for now
+      str = str.replace(createRegex(item.find), item.replace)
+      [].concat(item.after).forEach (fix) -> str = fix(str)
+  str
 
 class OnParser # Object notation parser, type agnostic
+
+  onDownload: (fn) -> @_onDownload = fn; @
+
+  onExtract: (fn) -> @_onExtract = fn; @
+
+  parse: (obj) ->
+    if typeof obj != 'object'
+      throw new Error('You need to provide an object or an array')
+
+    @_obj = obj
+    @_parse()
+    @
+
   _parse: ->
     @_iterate(if @_obj instanceof Array then @_obj else [ @_obj ])
 
@@ -19,6 +53,7 @@ class OnParser # Object notation parser, type agnostic
     file = item.file ? false
     filename = item.filename ? false
     filenameMode = item.filenameMode ? ['urlBasename', 'contentType']
+    directory = item.directory ? ''
     execute = item.execute ? false
     extract = item.extract ? false
 
@@ -34,6 +69,7 @@ class OnParser # Object notation parser, type agnostic
 
     downloadOptions = {}
     downloadOptions.filenameMode = filenameMode
+    downloadOptions.directory = replaceVars(directory)
 
     [].concat(filenameMode).forEach (i) ->
       downloadOptions.filenameMode[i] = true
@@ -41,31 +77,31 @@ class OnParser # Object notation parser, type agnostic
     if typeof filename == 'string'
       downloadOptions.filenameMode['predefined'] = filename
 
-    fileInstance = attrInstance.download(downloadOptions)
+    fileInstance = attrInstance.download(downloadOptions, @_onDownload)
 
     if execute != false
       fileInstance.execute(execute)
 
     if extract != false
-      console.log "extract", extract
-      fileInstance.extract(extract)
+      if extract.to?
+        extract.to = replaceVars(extract.to)
+      fileInstance.extract(extract, @_onExtract)
 
 class Parser extends OnParser
-  constructor: (@_filepath) ->
-    if typeof @_filepath == 'object'
-      @_obj = @_filepath
+  _getObj: (filepath) ->
+    if typeof filepath == 'object'
+      obj = filepath
     else
-      @_realfilepath = if isAbsolute(@_filepath) then @_filepath else join(process.cwd(), @_filepath)
-      @_ext = extname(@_filepath)
+      realfilepath = if isAbsolute(filepath) then filepath else join(process.cwd(), filepath)
+      ext = extname(filepath)
+      if ext == '.json'
+        obj = require(realfilepath)
+      else if ext == '.yml'
+        obj = YAML.load(realfilepath)
+    obj
 
-  parse: ->
-    if @_ext == '.json'
-      @_obj = require(@_realfilepath)
-      @_parse()
-    else if @_ext == '.yml'
-      @_obj = YAML.load(@_realfilepath)
-      @_parse()
-    else if @_obj?
-      @_parse()
+  parse: (filepath) ->
+    obj = @_getObj(filepath)
+    super(obj)
 
 module.exports = Parser

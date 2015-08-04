@@ -52,9 +52,9 @@ describe 'endl test #4', ->
 
   it 'should use previousUrl', (done) ->
     endl.page(urls[3])
-      .find('a[href^="http://downloads.ddigest.com/software/download.php"]')
+      .find('a[href^="http://www.majorgeeks.com/"]')
       .page({ pageUrlAsReferrer: true })
-      .find('a[href^="http://downloads.ddigest.com/software/getdownload.php?sid=1089"]',
+      .find('a[href*="getmirror/k_lite_mega_codec_pack"]',
         (container) ->
           referer = container._scraper.scraper.response.request.headers.referer
           if referer == urls[3]
@@ -62,3 +62,9 @@ describe 'endl test #4', ->
           else
             throw new Error "Referrer is not initial URL: #{referer}"
       )
+
+describe 'endl test #5', ->
+  @timeout waitTime
+
+  it 'should parse json', (done) ->
+    endl.load(join(__dirname, 'test.json'), null, -> done())

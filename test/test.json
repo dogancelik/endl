@@ -1,0 +1,22 @@
+[
+  {
+    "url": "http://www.mp3tag.de/en/download.html",
+    "find": "div.download a",
+    "filenameMode": ["urlBasename"],
+    "directory": "%tmpdir%"
+  },
+  {
+    "url": "http://slimerjs.org/download.html",
+    "find": "a.btn",
+    "findIndex": 4,
+    "filename": "slimerjs.zip",
+    "directory": "%tmpdir%",
+    "extract":
+      {
+        "to": "%tmpdir%/slimerjs",
+        "cdRegex": "^slimerjs",
+        "fileGlob": "*.png",
+        "maintainEntryPath": false
+      }
+  }
+]
