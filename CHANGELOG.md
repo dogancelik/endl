@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.7.0
+
+* *endl.load()* now supports two callbacks, first callback is called when download is finished, second is called when extraction is finished.
+* *OnParser* (the parser that allows you to use *JSON*) supports *directory* option like *download()* does.
+
 ## v0.6.0
 
 * *decodeURIComponent* is applied on file name when *urlBasename* is true.
