@@ -127,7 +127,7 @@ class File
       stat options.directory, (err, stats) ->
         if err and err.code == 'ENOENT'
           mkdirp options.directory, -> startDownload()
-        if not err
+        else if not err
           startDownload()
         else
           throw err
