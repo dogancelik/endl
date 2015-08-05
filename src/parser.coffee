@@ -2,26 +2,7 @@ Core = require './core'
 { extname, join, isAbsolute, normalize } = require 'path'
 { FindType } = require './extractor'
 { tmpdir } = require 'os'
-
-Vars = {
-  tmpdir: {
-    find: '%tmpdir%'
-    replace: tmpdir
-    after: normalize
-  }
-}
-
-createRegex = (str) ->
-  new RegExp(str, 'gi')
-
-replaceVars = (str) ->
-  oldStr = str
-  for key, item of Vars
-    if str.indexOf(item.find) > -1
-      # Not going to add any type checks for now
-      str = str.replace(createRegex(item.find), item.replace)
-      [].concat(item.after).forEach (fix) -> str = fix(str)
-  str
+replacer = require './replacer'
 
 class OnParser # Object notation parser, type agnostic
 
@@ -70,7 +51,7 @@ class OnParser # Object notation parser, type agnostic
 
       downloadOptions = {}
       downloadOptions.filenameMode = filenameMode
-      downloadOptions.directory = replaceVars(directory)
+      downloadOptions.directory = replacer.replace(directory)
 
       [].concat(filenameMode).forEach (i) ->
         downloadOptions.filenameMode[i] = true
@@ -85,7 +66,7 @@ class OnParser # Object notation parser, type agnostic
 
       if extract != false
         if extract.to?
-          extract.to = replaceVars(extract.to)
+          extract.to = replacer.replace(extract.to)
         fileInstance.extract(extract, @_onExtract)
 
 class Parser extends OnParser

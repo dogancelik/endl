@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.8.2
+
+* Rewrote "pattern replacer". Parser now supports *%tmpdir%* and *%env:VARNAME%* for *directory* and *extract.to*.
+
+## v0.8.1
+
+* Fix new directory crash bug in *download()*
+
 ## v0.8.0
 
 * Completely removed *deasync* module.
