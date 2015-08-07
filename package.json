@@ -13,7 +13,7 @@
     "executer",
     "unzipper"
   ],
-  "license": "Custom license",
+  "license": "SEE LICENSE IN LICENSE.md",
   "preferGlobal": false,
   "main": "lib/index.js",
   "repository": {
