@@ -1,5 +1,8 @@
-# *endl* (Link Extractor and Downloader) [![Build Status](https://travis-ci.org/dogancelik/endl.svg?branch=master)](https://travis-ci.org/dogancelik/endl)
-A Node.js module for extracting links from web pages and downloading them.
+![endl-banner](https://cloud.githubusercontent.com/assets/486818/9147568/65481174-3d71-11e5-86c4-27f0647c37dc.png)
+
+[![Build Status](https://travis-ci.org/dogancelik/endl.svg?branch=master)](https://travis-ci.org/dogancelik/endl)
+
+*endl* is a Node.js module for extracting links from web pages and downloading them.
 
 [![NPM](https://nodei.co/npm/endl.png?downloads=true&stars=true)](https://nodei.co/npm/endl/)
 
@@ -8,7 +11,7 @@ A Node.js module for extracting links from web pages and downloading them.
 
 *endl* has a very simple also an advanced API for link extracting, file downloading, executing and unzipping.
 
-**Every version under 1.0 is beta. This means it has bugs and features can change.**
+:exclamation: Every version under 1.0 is *experimental*. Features work but they may have bugs or they can change in next versions so you should also pay attention to the changelog frequently. :exclamation:
 
 ## Simple example
 This is written in [*CoffeeScript*](https://github.com/jashkenas/coffeescript).
