@@ -25,7 +25,7 @@ describe 'endl test #1', ->
       container._getAttr('alt').should.be.equal ':3'
       done()
 
-  it 'should download src', (done) ->
+  it 'should resolve URL and download src', (done) ->
     extractorInstance = endl.page(urls[0])
     containerPromise = extractorInstance.find('#gif')
     containerPromise.then((container) ->

@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.9.1
+
+* *endl* should now resolve URLs without domains better in *download()* (e.g. If `href` is `/LatestSetup.exe` not `http://example.com/LatestSetup.exe`)
+
 ## v0.9.0
 
 * *Container* class now assumes `href` as default attribute name. This means `attr(attrName)` will assume `href` if its first argument is null.

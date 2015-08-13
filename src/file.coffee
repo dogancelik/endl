@@ -78,9 +78,8 @@ class File
       noDecode: true
     }
 
-    if downloadUrl[0] == '/' and @_pageUrl.length > 0 # url doesn't have domain
-      domain = url.resolve(@_pageUrl, '/').replace(/\/$/, '')
-      downloadUrl = domain + downloadUrl
+    if /^https?:/.test(downloadUrl) == false and @_pageUrl.length > 0 # url doesn't have domain
+      downloadUrl = url.resolve(@_pageUrl, downloadUrl)
 
     if options.pageUrlAsReferrer is true
       requestOptions.headers.referer = if @_pageUrl then @_pageUrl else downloadUrl # good choice? prob not
