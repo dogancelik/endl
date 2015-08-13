@@ -5,6 +5,7 @@ that = this
 class Container
   constructor: (@_pageUrl, @_scraper, @_findType) ->
     @_index = 0
+    @_attrName = 'href'
 
     extractor = require './extractor'
     that.FindType = extractor.FindType
@@ -26,25 +27,36 @@ class Container
     # to avoid circular dependency problem, we put here
     require('./core').page(url, targetOptions)
 
-  _getAttr: (attrName) ->
+  _getAttr: (attrName, index) ->
+    attrName ?= @_attrName
+    index ?= @_index
+
     if @_findType is that.FindType.cheerio
-      @_attr = @_find[@_index].attribs[attrName]
+      _attr = @_find[index].attribs[attrName]
     else if @_findType is that.FindType.xpath
-      @_attr = @_find.attributes.getNamedItem(attrName).value
+      _attr = @_find.attributes.getNamedItem(attrName).value
 
-    @_attr
+    _attr
 
-  attr: (attrName) ->
-    @_getAttr(attrName)
-    new Attr @_pageUrl, @_find, @_findType, @_attr
+  attr: (attrName, index, _attr) ->
+    _attr ?= @_getAttr(attrName, index)
+    new Attr @_pageUrl, @_find, @_findType, _attr
 
-  href: (attrName) -> @attr('href')
+  all: (attrName) ->
+    if @_findType is that.FindType.cheerio
+      @attr(attrName, index) for index in [0..@_find.length-1]
+    else
+      [attr(attrName)]
+
+  href: -> @attr('href')
 
   text: ->
     if @_findType is that.FindType.cheerio
-      @_attr = @_find.index(@_index).text()
+      _attr = @_find.index(@_index).text()
     else if @_findType is that.FindType.xpath
-      @_attr = @_find.textContent
+      _attr = @_find.textContent
+
+    attr(null, null, _attr)
 
   index: (index) ->
     @_index = index

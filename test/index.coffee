@@ -36,11 +36,24 @@ describe 'endl test #1', ->
 describe 'endl test #2', ->
   @timeout waitTime
 
+  qsa = 'a[href^="http://lame.buanzo.org/Lame_"]'
+  downloadOpts = {pageUrlAsReferrer: true, directory: tmpdir(), filenameMode: { urlBasename: true }}
+
   it 'should download', (done) ->
     endl.page(urls[1])
-      .find('a[href^="http://lame.buanzo.org/Lame_"]')
+      .find(qsa)
       .then (container) ->
-        container.download {pageUrlAsReferrer: true, directory: tmpdir(), filenameMode: { urlBasename: true }}, -> done()
+        container.download downloadOpts, -> done()
+
+  it 'should download all files with .all', (done) ->
+    i = 0
+    endl.page(urls[1])
+      .find(qsa)
+      .then (container) ->
+        container.all().forEach (attr) ->
+          attr.download downloadOpts, ->
+            i++
+            done() if i == 4
 
 describe 'endl test #3', ->
   @timeout waitTime

@@ -31,7 +31,6 @@ class OnParser # Object notation parser, type agnostic
     findType = FindType[item.findType ? 'cheerio']
     attr = item.attr ? 'href'
     useText = item.text ? false
-    file = item.file ? false
     filename = item.filename ? false
     filenameMode = item.filenameMode ? ['urlBasename', 'contentType']
     directory = item.directory ? ''

@@ -5,7 +5,9 @@ class Attr
   constructor: (@_pageUrl, @_find, @_findType, @_attr) ->
     @_attr = @_attr.toString()
 
-  value: -> @_attr
+  value: (val) ->
+    @_attr = val if val?
+    @_attr
 
   page: (options) ->
     url = @_attr

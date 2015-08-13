@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.9.0
+
+* *Container* class now assumes `href` as default attribute name. This means `attr(attrName)` will assume `href` if its first argument is null.
+* There is a new function `all(attrName)` in *Container* class. It returns **an array** of *Attr* instances.
+* `text()` in *Container* class now returns an *Attr* instance.
+* `value(newValue)` in *Attr* class now supports getting and setting.
+
 ## v0.8.2
 
 * Rewrote "pattern replacer". Parser now supports *%tmpdir%* and *%env:VARNAME%* for *directory* and *extract.to*.
