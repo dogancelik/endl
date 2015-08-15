@@ -16,11 +16,14 @@ bhttp = require 'bhttp'
 class File
   constructor: (@_url, @_pageUrl) ->
     @_ee = new EventEmitter()
+    @_downloadFinished = false
 
   # Binds a 'end' callback to response
-  _bindCallback: (response, callback, data) ->
+  _bindCallback: (response, callback, thisClass, args...) ->
     if typeof callback == 'function'
-      response.on 'end', -> callback(data)
+      response.on 'end', ->
+        thisClass._downloadFinished = true
+        callback.apply thisClass, args
 
   _getDefaultDownloadOptions: ->
     {
@@ -121,8 +124,7 @@ class File
       startDownload = ->
         thisClass._stream = createWriteStream thisClass._file
         thisClass._ee.emit 'create'
-        File::_bindCallback response, callback, callbackData
-        File::_bindCallback response, -> thisClass._downloadFinished = true
+        File::_bindCallback response, callback, thisClass, callbackData
         response.pipe thisClass._stream
 
       stat options.directory, (err, stats) ->
