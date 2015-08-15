@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.9.3
+
+* Fix no chaining support for *extract()* and *execute()*
+
 ## v0.9.2
 
 * *extract()* and *execute()* now returns *File* instance. This means you can extract or execute more than once.
