@@ -19,7 +19,7 @@ var endl = require('endl');
 
 endl
   .page('http://lame.buanzo.org/')
-  .find('a[href^="http://lame.buanzo.org/Lame_"]') # returns Promise
+  .find('a[href^="http://lame.buanzo.org/Lame_"]') // returns Promise
   .then(function(container) {
     container.download({
       pageUrlAsReferrer: true,
