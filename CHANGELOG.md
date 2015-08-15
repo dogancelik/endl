@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.9.2
+
+* *extract()* and *execute()* now returns *File* instance. This means you can extract or execute more than once.
+* You can now use *extract()* and *execute()* even when no method chaining is done.
+* *extract()* and *execute()* will only execute *once per download()*.
+
+**Explanation for the last bullet:** In previous versions, if you did: `download(...).extract(...).download(...)`, this would trigger *extract()* twice because we did `.on` bindings to the download stream instead of `.once`. Now if you ever download the file again within the same *File* instance, you have to use *extract()* again to extract it.
+
 ## v0.9.1
 
 * *endl* should now resolve URLs without domains better in *download()* (e.g. If `href` is `/LatestSetup.exe` not `http://example.com/LatestSetup.exe`)

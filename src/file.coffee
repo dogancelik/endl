@@ -111,6 +111,7 @@ class File
       options.directory = path.resolve options.directory
 
       thisClass._file = join options.directory, filename
+      thisClass._downloadFinished = false # for extract and execute
 
       callbackData = {
         url: downloadUrl
@@ -120,7 +121,8 @@ class File
       startDownload = ->
         thisClass._stream = createWriteStream thisClass._file
         thisClass._ee.emit 'create'
-        File::_bindCallback(response, callback, callbackData)
+        File::_bindCallback response, callback, callbackData
+        File::_bindCallback response, -> thisClass._downloadFinished = true
         response.pipe thisClass._stream
 
       stat options.directory, (err, stats) ->
@@ -187,7 +189,12 @@ class File
 
   extract: (options, callback) ->
     thisClass = @
-    thisClass._ee.on 'create', -> thisClass._stream.on('finish', thisClass._extractOnFinish.bind(thisClass, options, callback))
+    extractOnFinish = thisClass._extractOnFinish.bind(thisClass, options, callback)
+    if @_downloadFinished == true
+      extractOnFinish()
+    else
+      thisClass._ee.once 'create', -> thisClass._stream.once('finish', extractOnFinish)
+    @
 
   _executeOnFinish: (options) ->
     if options instanceof Array
@@ -202,6 +209,11 @@ class File
 
   execute: (options) ->
     thisClass = @
-    thisClass._ee.on 'create', -> thisClass._stream.on('finish', thisClass._executeOnFinish.bind(thisClass, options))
+    executeOnFinish = thisClass._executeOnFinish.bind(thisClass, options)
+    if @_downloadFinished == true
+      executeOnFinish()
+    else
+      thisClass._ee.once 'create', -> thisClass._stream.once('finish', executeOnFinish)
+    @
 
 module.exports = File
