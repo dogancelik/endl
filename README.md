@@ -6,23 +6,26 @@
 
 [![NPM](https://nodei.co/npm/endl.png?downloads=true&stars=true)](https://nodei.co/npm/endl/)
 
-| [Changelog](https://github.com/dogancelik/endl/blob/master/CHANGELOG.md) | [API](https://github.com/dogancelik/endl/wiki/API) | [Examples](https://github.com/dogancelik/endl/wiki/Examples) | [CLI](https://github.com/dogancelik/endl-cli) |
-|:-:|:-:|:-:|:-:|
+| [Changelog](https://github.com/dogancelik/endl/blob/master/CHANGELOG.md) | [API](https://github.com/dogancelik/endl/wiki/API) | [Examples](https://github.com/dogancelik/endl/wiki/Examples) | [CLI](https://github.com/dogancelik/endl-cli) | [To-Do List](https://trello.com/b/GIu0Rooi)
+|:-:|:-:|:-:|:-:|:-:|
 
 *endl* has a very simple also an advanced API for link extracting, file downloading, executing and unzipping.
 
 :exclamation: Every version under 1.0 is *experimental*. Features work but they may have bugs or they can change in next versions so you should also pay attention to the changelog frequently. :exclamation:
 
 ## Simple example
-This is written in [*CoffeeScript*](https://github.com/jashkenas/coffeescript).
+```js
+var endl = require('endl');
 
-```coffee
-endl = require 'endl'
-
-endl.page('http://lame.buanzo.org/')
+endl
+  .page('http://lame.buanzo.org/')
   .find('a[href^="http://lame.buanzo.org/Lame_"]') # returns Promise
-  .then (container) ->
-    container.download(pageUrlAsReferrer: true, filenameMode: { urlBasename: true })
+  .then(function(container) {
+    container.download({
+      pageUrlAsReferrer: true,
+      filenameMode: { urlBasename: true }
+    });
+  });
 ```
 
 ### Explanation
@@ -49,5 +52,6 @@ Like *Handel* the composer, but without the *h* → *andel* :)
 * findXpath doesn't work. Blame web pages (for incorrect structure), xmldom and xpath modules.
 
 ## To-Do
-* Unify all downloading, extraction and execution options across submodules. (`endl.coffee`, `file.coffee`, `parser.coffee`) These 3 submodules have different *default* options for each task.
-* Add more tests.
+[To-do list is at Trello](https://trello.com/b/GIu0Rooi) (You can vote on notes)
+
+If you don't have a Trello account and want to vote, [you can use my referral link to register](https://trello.com/dogancelik/recommend) (They just give a month of free Gold membership for each referral so I can add custom background images to the board :smile:)
