@@ -1,8 +1,8 @@
 Core = require './core'
 { extname, join, isAbsolute, normalize } = require 'path'
 { FindType } = require './extractor'
-{ tmpdir } = require 'os'
 replacer = require './replacer'
+{ _extend } = require 'util'
 
 class OnParser # Object notation parser, type agnostic
 
@@ -18,11 +18,15 @@ class OnParser # Object notation parser, type agnostic
     @_parse()
     @
 
-  _parse: ->
-    @_iterate(if @_obj instanceof Array then @_obj else [ @_obj ])
+  _parse: (obj, extend) ->
+    obj ?= @_obj
+    obj = if Array.isArray(obj) then obj else [ obj ]
+    @_iterate(obj, extend)
 
-  _iterate: (obj) ->
-    obj.forEach (i) => @_iterateItem(i)
+  _iterate: (obj, extend) ->
+    obj.forEach (i) =>
+      i = _extend i, extend
+      @_iterateItem i
 
   _iterateItem: (item) ->
     url = item.url
@@ -31,6 +35,7 @@ class OnParser # Object notation parser, type agnostic
     findType = FindType[item.findType ? 'cheerio']
     attr = item.attr ? 'href'
     useText = item.text ? false
+    thenObj = item.then ? false
     filename = item.filename ? false
     filenameMode = item.filenameMode ? ['urlBasename', 'contentType']
     directory = item.directory ? ''
@@ -47,6 +52,10 @@ class OnParser # Object notation parser, type agnostic
         attrInstance = containerInstance.text()
       else
         attrInstance = containerInstance.attr(attr)
+
+      if thenObj != false
+        extend = { url: attrInstance.value() }
+        return @_parse(thenObj, extend)
 
       downloadOptions = {}
       downloadOptions.filenameMode = filenameMode

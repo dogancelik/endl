@@ -1,0 +1,17 @@
+{
+  "url": "https://www.python.org/downloads/windows/",
+  "find": "a[href^='/downloads/release/']",
+  "then": [
+    {
+      "find": "a[href$='.amd64.msi']",
+      "filenameMode": ["urlBasename"],
+      "directory": "%tmpdir%"
+    },
+    {
+      "find": "a[href$='.msi']",
+      "findIndex": 1,
+      "filenameMode": ["urlBasename"],
+      "directory": "%tmpdir%"
+    }
+  ]
+}

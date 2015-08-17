@@ -1,0 +1,6 @@
+{
+  "url": "http://www.mp3tag.de/en/download.html",
+  "find": "div.download a",
+  "filenameMode": ["urlBasename"],
+  "directory": "%tmpdir%"
+}

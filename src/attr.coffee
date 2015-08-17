@@ -3,7 +3,10 @@ File = require './file'
 
 class Attr
   constructor: (@_pageUrl, @_find, @_findType, @_attr) ->
-    @_attr = @_attr.toString()
+    @_original = @_attr = @_attr.toString()
+    @_attr = File::_getFullUrl(@_pageUrl, @_original)
+
+  original: -> @_original
 
   value: (val) ->
     @_attr = val if val?

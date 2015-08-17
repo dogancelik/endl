@@ -1,6 +1,7 @@
 { tmpdir } = require 'os'
 { join } = require 'path'
 endl = require '../src/index'
+{ expect } = require 'chai'
 
 waitTime = 20000
 urls = [
@@ -16,13 +17,13 @@ describe 'endl test #1', ->
   it 'should load page', (done) ->
     extractorInstance = endl.page(urls[0])
     extractorInstance._scraper.onStatusCode (code) ->
-      code.should.be.equal 200
+      expect(code).to.be.equal(200)
       done()
 
   it 'should find element', (done) ->
     extractorInstance = endl.page(urls[0])
     extractorInstance.find '#gif', (container) ->
-      container._getAttr('alt').should.be.equal ':3'
+      expect(container._getAttr('alt')).to.be.equal(':3')
       done()
 
   it 'should resolve URL and download src', (done) ->
@@ -80,9 +81,3 @@ describe 'endl test #4', ->
               else
                 throw new Error "Referrer is not initial URL: #{referer}"
           )
-
-describe 'endl test #5', ->
-  @timeout waitTime
-
-  it 'should parse json', (done) ->
-    endl.load(join(__dirname, 'test.json'), null, -> done())

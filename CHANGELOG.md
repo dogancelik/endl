@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.10.0
+
+* You can now use *OnParser* recursively with `then` object (it also supports *Array* and *Object*).
+
 ## v0.9.3
 
 * Fix no chaining support for *extract()* and *execute()*
