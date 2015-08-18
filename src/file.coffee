@@ -84,7 +84,7 @@ class File
     }
 
     if /^https?:/.test(downloadUrl) == false and @_pageUrl.length > 0 # url doesn't have domain
-      downloadUrl = _getFullUrl @_pageUrl, downloadUrl
+      downloadUrl = @_getFullUrl @_pageUrl, downloadUrl
 
     if options.pageUrlAsReferrer is true
       requestOptions.headers.referer = if @_pageUrl then @_pageUrl else downloadUrl # good choice? prob not

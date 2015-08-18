@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.10.1
+
+* `page()` in *Attr* and *Container* now both pass *previousUrl*.
+* Fix crash if URL doesn't have domain in *File* class.
+
 ## v0.10.0
 
 * You can now use *OnParser* recursively with `then` object (it also supports *Array* and *Object*).

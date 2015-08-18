@@ -1,5 +1,6 @@
 Core = require './core'
 File = require './file'
+{ preparePageOptions } = require './util'
 
 class Attr
   constructor: (@_pageUrl, @_find, @_findType, @_attr) ->
@@ -14,6 +15,7 @@ class Attr
 
   page: (options) ->
     url = @_attr
+    options = preparePageOptions(@_pageUrl, options)
     Core.page(url, options)
 
   download: -> # don't use params here, use arguments instead because better compability

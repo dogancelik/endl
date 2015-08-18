@@ -1,5 +1,5 @@
 Attr = require './attr'
-{ _extend } = require 'util'
+{ preparePageOptions } = require './util'
 that = this
 
 class Container
@@ -22,7 +22,7 @@ class Container
       targetOptions = options
 
     url = @_getAttr(targetAttr)
-    targetOptions = _extend({ previousUrl: @_pageUrl }, targetOptions)
+    targetOptions = preparePageOptions(@_pageUrl, targetOptions)
 
     # to avoid circular dependency problem, we put here
     require('./core').page(url, targetOptions)
