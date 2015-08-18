@@ -6,7 +6,7 @@
 
 [![NPM](https://nodei.co/npm/endl.png?downloads=true&stars=true)](https://nodei.co/npm/endl/)
 
-| [Changelog](https://github.com/dogancelik/endl/blob/master/CHANGELOG.md) | [API](https://github.com/dogancelik/endl/wiki/API) | [Examples](https://github.com/dogancelik/endl/wiki/Examples) | [CLI](https://github.com/dogancelik/endl-cli) | [To-Do List](https://trello.com/b/GIu0Rooi)
+| [Changelog](https://github.com/dogancelik/endl/blob/master/CHANGELOG.md) | [API](https://github.com/dogancelik/endl/wiki/API) | [Examples](https://github.com/dogancelik/endl/wiki/Examples) | [CLI](https://github.com/dogancelik/endl-cli) | [To-Do List](https://trello.com/b/RqmGYFnT)
 |:-:|:-:|:-:|:-:|:-:|
 
 *endl* has a very simple also an advanced API for link extracting, file downloading, executing and unzipping.
@@ -52,6 +52,6 @@ Like *Handel* the composer, but without the *h* → *andel* :)
 * findXpath doesn't work. Blame web pages (for incorrect structure), xmldom and xpath modules.
 
 ## To-Do
-[To-do list is at Trello](https://trello.com/b/GIu0Rooi) (You can vote on notes)
+[To-do list is at Trello](https://trello.com/b/RqmGYFnT) (You can vote on notes)
 
 If you don't have a Trello account and want to vote, [you can use my referral link to register](https://trello.com/dogancelik/recommend) (They just give a month of free Gold membership for each referral so I can add custom background images to the board :smile:)
