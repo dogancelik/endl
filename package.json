@@ -1,7 +1,7 @@
 {
   "name": "endl",
-  "version": "0.10.1",
-  "description": "Link extractor, downloader, executer, unzipper",
+  "version": "0.10.2",
+  "description": "Easy-to-use link extractor and file downloader",
   "author": {
     "name": "Doğan Çelik",
     "email": "dogancelik93@gmail.com"

@@ -3,7 +3,7 @@
 endl = require '../src/index'
 { expect } = require 'chai'
 
-waitTime = 20000
+waitTime = 40000
 urls = [
   'http://dogancelik.com'
   'http://lame.buanzo.org/'

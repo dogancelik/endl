@@ -1,6 +1,6 @@
 Core = require './core'
 { extname, join, isAbsolute, normalize } = require 'path'
-{ FindType } = require './extractor'
+{ FindType } = require './util'
 replacer = require './replacer'
 { _extend } = require 'util'
 

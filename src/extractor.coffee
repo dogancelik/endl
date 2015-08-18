@@ -2,16 +2,27 @@ Container = require './container'
 xpath = require 'xpath'
 { DOMParser } = require 'xmldom'
 Promise = require 'bluebird'
-
-FindType = {
-  jquery: 0
-  qsa: 0
-  cheerio: 0
-  xpath: 1
-}
+{ FindType } = require './util'
+scraperjs = require 'scraperjs'
+{ _extend } = require 'util'
 
 class Extractor
-  constructor: (@_url, @_scraper) ->
+  constructor: (@_url, @_options) ->
+    @_options ?= {}
+    defaultOptions = url: @_url
+    @_options = _extend defaultOptions, @_options
+
+    if @_options.pageUrlAsReferrer is true
+      if !@_options.headers?
+        @_options.headers = {}
+      if @_options.hasOwnProperty 'previousUrl'
+        @_options.headers.referer = @_options.previousUrl
+      else
+        @_options.headers.referer = @_url
+
+    @_scraper = scraperjs.StaticScraper.create
+      url: @_options.url
+      headers: @_options.headers
 
   find: (query, callback) ->
     container = new Container(@_url, @_scraper, FindType.cheerio)
@@ -41,5 +52,4 @@ class Extractor
           resolve(container)
       )
 
-exports.Extractor = Extractor
-exports.FindType = FindType
+module.exports = Extractor

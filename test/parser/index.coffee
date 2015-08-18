@@ -4,7 +4,7 @@ endl = require '../../src/index'
 fs = require 'fs'
 { expect } = require 'chai'
 
-waitTime = 30000
+waitTime = 40000
 
 describe "parser 'replacer' test", ->
   @timeout waitTime
