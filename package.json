@@ -23,6 +23,7 @@
   "bugs": {
     "url": "https://github.com/dogancelik/endl/issues"
   },
+  "homepage": "https://github.com/dogancelik/endl",
   "scripts": {
     "prepublish": "coffee -bo lib/ src/",
     "test": "node_modules/.bin/mocha"
