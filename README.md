@@ -1,6 +1,6 @@
 ![endl-banner](https://cloud.githubusercontent.com/assets/486818/9147568/65481174-3d71-11e5-86c4-27f0647c37dc.png)
 
-[![Build Status](https://travis-ci.org/dogancelik/endl.svg?branch=master)](https://travis-ci.org/dogancelik/endl)
+[![Build Status](https://travis-ci.org/dogancelik/endl.svg?branch=master)](https://travis-ci.org/dogancelik/endl) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dogancelik/endl)
 
 *endl* is a Node.js module for extracting links from web pages and downloading them.
 
