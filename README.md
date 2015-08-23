@@ -14,6 +14,8 @@
 :exclamation: Every version under 1.0 is *experimental*. Features work but they may have bugs or they can change in next versions so you should also pay attention to the changelog frequently. :exclamation:
 
 ## Simple example
+
+[![Join the chat at https://gitter.im/dogancelik/endl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dogancelik/endl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ```js
 var endl = require('endl');
 
