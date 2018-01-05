@@ -199,7 +199,7 @@ class File
     if @_downloadFinished == true
       extractOnFinish()
     else
-      thisClass._stream.once 'finish', extractOnFinish
+      thisClass._ee.once 'create', -> thisClass._stream.once 'finish', extractOnFinish
     @
 
   _executeOnFinish: (options) ->
