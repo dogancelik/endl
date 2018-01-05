@@ -32,6 +32,7 @@ class Extractor
       thisClass._scraper.scrape(
         ($) ->
           container._find = $(query)
+          container._finalUrl = thisClass._scraper.scraper.url
         , ->
           callback(container) if typeof callback == 'function'
           resolve(container)

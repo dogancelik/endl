@@ -5,6 +5,7 @@ class Container
   constructor: (@_pageUrl, @_scraper, @_findType) ->
     @_index = 0
     @_attrName = 'href'
+    @_finalUrl = @_pageUrl # URL may change after redirect
 
   page: (attrName, options) ->
     targetAttr = 'href'
@@ -18,7 +19,7 @@ class Container
       targetOptions = options
 
     url = @_getAttr(targetAttr)
-    targetOptions = preparePageOptions(@_pageUrl, targetOptions)
+    targetOptions = preparePageOptions(@_finalUrl, targetOptions)
     # to avoid circular dependency problem, we put here
     require('./core').page(url, targetOptions)
 
@@ -38,7 +39,7 @@ class Container
 
   attr: (attrName, index, _attr) ->
     _attr ?= @_getAttr(attrName, index)
-    new Attr @_pageUrl, @_find, @_findType, _attr
+    new Attr @_finalUrl, @_find, @_findType, _attr
 
   all: (attrName) ->
     if @_findType is FindType.cheerio
