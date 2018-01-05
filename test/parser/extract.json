@@ -1,7 +1,7 @@
 {
   "url": "http://slimerjs.org/download.html",
   "find": "a.btn",
-  "findIndex": 4,
+  "findIndex": 0,
   "filename": "slimerjs.zip",
   "directory": "%tmpdir%",
   "extract":

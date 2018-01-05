@@ -3,12 +3,12 @@
   "find": "a[href^='/downloads/release/']",
   "then": [
     {
-      "find": "a[href$='.amd64.msi']",
+      "find": "a[href$='.exe']",
       "filenameMode": ["urlBasename"],
       "directory": "%tmpdir%"
     },
     {
-      "find": "a[href$='.msi']",
+      "find": "a[href$='.zip']",
       "findIndex": 1,
       "filenameMode": ["urlBasename"],
       "directory": "%tmpdir%"

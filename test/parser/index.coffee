@@ -14,6 +14,7 @@ describe "parser 'replacer' test", ->
       expect(downloadData).to.be.an('object').that.have.all.keys('url', 'file')
       expect(fs.statSync.bind(fs, downloadData.file)).to.not.throw(Error)
       done()
+    null
 
 describe "parser 'extract' test", ->
   @timeout waitTime
@@ -22,6 +23,7 @@ describe "parser 'extract' test", ->
     endl.load join(__dirname, 'extract.json'), null, (extractData) ->
       expect(extractData).to.be.an('array').that.have.deep.property('[0].from').that.is.a('string').that.contains('.png')
       done()
+    null
 
 describe "parser 'then' test", ->
   @timeout waitTime
@@ -33,3 +35,4 @@ describe "parser 'then' test", ->
       expect(downloadData).to.be.an('object').that.have.all.keys('url', 'file')
       expect(fs.statSync.bind(fs, downloadData.file)).to.not.throw(Error)
       done() if ++i == 2
+    null
