@@ -24,7 +24,6 @@ class File
   _bindCallback: (response, callback, thisClass, args...) ->
     if typeof callback == 'function'
       response.on 'end', ->
-        thisClass._downloadFinished = true
         callback.apply thisClass, args
 
   _getDefaultDownloadOptions: ->
@@ -125,6 +124,9 @@ class File
 
       startDownload = ->
         thisClass._stream = createWriteStream thisClass._file
+        thisClass._stream.on 'finish', ->
+          thisClass._downloadFinished = true
+          thisClass._ee.emit 'finish'
         thisClass._ee.emit 'create'
         File::_bindCallback response, callback, thisClass, callbackData
         response.pipe thisClass._stream
@@ -197,7 +199,7 @@ class File
     if @_downloadFinished == true
       extractOnFinish()
     else
-      thisClass._ee.once 'create', -> thisClass._stream.once('finish', extractOnFinish)
+      thisClass._stream.once 'finish', extractOnFinish
     @
 
   _executeOnFinish: (options) ->
@@ -217,7 +219,7 @@ class File
     if @_downloadFinished == true
       executeOnFinish()
     else
-      thisClass._ee.once 'create', -> thisClass._stream.once('finish', executeOnFinish)
+      thisClass._stream.once 'finish', executeOnFinish
     @
 
 module.exports = File
