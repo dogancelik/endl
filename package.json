@@ -1,6 +1,6 @@
 {
   "name": "endl",
-  "version": "0.10.2",
+  "version": "1.0.0",
   "description": "Easy-to-use link extractor and file downloader",
   "author": {
     "name": "Doğan Çelik",
@@ -26,7 +26,8 @@
   "homepage": "https://github.com/dogancelik/endl",
   "scripts": {
     "prepublish": "coffee -bo lib/ src/",
-    "test": "node_modules/.bin/mocha"
+    "test": "node_modules/.bin/mocha",
+    "watch": "coffee -wbo lib/ src/"
   },
   "directories": {
     "lib": "lib"
@@ -48,6 +49,6 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "mocha": "^2.2.4"
+    "mocha": "^4.1.0"
   }
 }
