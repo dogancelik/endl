@@ -26,6 +26,9 @@ class Container
     attrName ?= @_attrName
     index ?= @_index
 
+    if index < 0 # reverse index
+      index = @_find.length + index
+
     if @_findType is FindType.cheerio
       _attr = @_find[index].attribs[attrName]
     else if @_findType is FindType.xpath
