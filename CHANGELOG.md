@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.0
+
+* Major version update (endl is not "experimental" anymore, no breaking changes).
+* You can now use negative value on *Container.index()*.
+* Use final URL when using *Referer* header.
+* Callbacks on *extract()* and *execute()* should work properly now.
+
 ## v0.10.2
 
 * Just some cleanup.

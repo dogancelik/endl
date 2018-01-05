@@ -11,7 +11,8 @@
 
 *endl* has a very simple also an advanced API for link extracting, file downloading, executing and unzipping.
 
-:exclamation: Every version under 1.0 is *experimental*. Features work but they may have bugs or they can change in next versions so you should also pay attention to the changelog frequently. :exclamation:
+:exclamation: 2 years later(:bangbang:), we have finally reached **version 1**!
+Bugs may still exist but *endl* should be more stable now. :exclamation:
 
 ## Simple example
 ```js
