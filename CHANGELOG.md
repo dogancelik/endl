@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.1
+
+* Callbacks on *extract()* and *execute()* should ***finally*** work.
+
 ## v1.0.0
 
 * Major version update (endl is not "experimental" anymore, no breaking changes).

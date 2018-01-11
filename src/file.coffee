@@ -199,7 +199,7 @@ class File
     if @_downloadFinished == true
       extractOnFinish()
     else
-      thisClass._ee.once 'create', -> thisClass._stream.once 'finish', extractOnFinish
+      thisClass._ee.once 'finish', extractOnFinish
     @
 
   _executeOnFinish: (options) ->
@@ -219,7 +219,7 @@ class File
     if @_downloadFinished == true
       executeOnFinish()
     else
-      thisClass._stream.once 'finish', executeOnFinish
+      thisClass._ee.once 'finish', executeOnFinish
     @
 
 module.exports = File
