@@ -30,10 +30,13 @@ class Container
     if index < 0 # reverse index
       index = @_find.length + index
 
-    if @_findType is FindType.cheerio
-      _attr = @_find[index].attribs[attrName]
-    else if @_findType is FindType.xpath
-      _attr = @_find.attributes.getNamedItem(attrName).value
+    try
+      if @_findType is FindType.cheerio
+        _attr = @_find[index].attribs[attrName]
+      else if @_findType is FindType.xpath
+        _attr = @_find.attributes.getNamedItem(attrName).value
+    catch e
+      throw new Error("Could not find attribute '#{attrName}' at element index '#{index}'")
 
     _attr
 
