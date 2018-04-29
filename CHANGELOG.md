@@ -3,6 +3,7 @@
 ## v1.1.0
 
 * *(internal)* Dropped `scraperjs` dependency
+* Fix ZIP extract
 
 ## v1.0.1
 

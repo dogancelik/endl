@@ -179,17 +179,18 @@ class File
       fromPath = entry.entryName
 
       if options.maintainEntryPath
-        targetDirname = dirname(entry.entryName)
-
         if cdRegex != null
-          targetDirname = targetDirname.replace(cdRegex, '')
+          targetDirname = dirname(entry.entryName.replace(cdRegex, ''))
+        else
+          targetDirname = dirname(entry.entryName)
 
         toPath = join(options.to, targetDirname)
       else
         toPath = options.to
 
       extracted.push {from: fromPath, to: toPath}
-      zip.extractEntryTo(fromPath, toPath, false, options.overwrite)
+      unless entry.isDirectory
+        zip.extractEntryTo(fromPath, toPath, false, options.overwrite)
 
     callback(extracted) if typeof callback == 'function'
 
