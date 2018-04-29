@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.0
+
+* *(internal)* Dropped `scraperjs` dependency
+
 ## v1.0.1
 
 * Callbacks on *extract()* and *execute()* should ***finally*** work.

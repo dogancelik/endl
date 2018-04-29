@@ -2,8 +2,7 @@ Container = require './container'
 xpath = require 'xpath'
 { DOMParser } = require 'xmldom'
 Promise = require 'bluebird'
-{ FindType } = require './util'
-scraperjs = require 'scraperjs'
+{ FindType, getDocument } = require './util'
 { _extend } = require 'util'
 
 class Extractor
@@ -20,37 +19,28 @@ class Extractor
       else
         @_options.headers.referer = @_url
 
-    @_scraper = scraperjs.StaticScraper.create
-      url: @_options.url
+    @_scraper = getDocument
+      uri: @_options.url
       headers: @_options.headers
 
   find: (query, callback) ->
     container = new Container(@_url, @_scraper, FindType.cheerio)
     thisClass = this
 
-    new Promise (resolve, reject) ->
-      thisClass._scraper.scrape(
-        ($) ->
-          container._find = $(query)
-          container._finalUrl = thisClass._scraper.scraper.url
-        , ->
-          callback(container) if typeof callback == 'function'
-          resolve(container)
-      )
+    thisClass._scraper.then (res) ->
+      container._find = res.$(query)
+      container._finalUrl = res.finalUrl
+      callback(container) if typeof callback == 'function'
+      container
 
   findXpath: (query, callback) ->
     container = new Container(@_url, @_scraper, FindType.xpath)
     thisClass = this
 
-    new Promise (resolve, reject) ->
-      thisClass._scraper.scrape(
-        ->
-          doc = new DOMParser().parseFromString(thisClass._scraper.scraper.body, "text/html")
-          nodes = xpath.select(query, doc)
-          container._find = nodes
-        , ->
-          callback(container) if typeof callback == 'function'
-          resolve(container)
-      )
+    thisClass._scraper.then (res) ->
+      doc = new DOMParser().parseFromString(res.body, 'text/html')
+      nodes = xpath.select(query, doc)
+      container._find = nodes
+      callback(container) if typeof callback == 'function'
 
 module.exports = Extractor

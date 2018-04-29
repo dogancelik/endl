@@ -1,4 +1,6 @@
 { _extend } = require 'util'
+rp = require 'request-promise'
+cheerio = require 'cheerio'
 
 module.exports =
   preparePageOptions: (previousUrl, options) ->
@@ -9,3 +11,10 @@ module.exports =
     qsa: 0
     cheerio: 0
     xpath: 1
+
+  getDocument: (options) ->
+    options.resolveWithFullResponse = true
+    rp(options).then (res) ->
+      finalUrl: res.request.uri
+      body: res.body
+      $: cheerio.load(res.body)
