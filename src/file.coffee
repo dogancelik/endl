@@ -131,7 +131,8 @@ class File
           thisClass._downloadFinished = true
           thisClass._ee.emit 'finish'
         thisClass._ee.emit 'create'
-        File::_bindCallback response, callbacks.end, thisClass, callbackData
+        endCallback = if typeof callbacks == 'function' then callbacks else callbacks.end
+        File::_bindCallback response, endCallback, thisClass, callbackData
         response.pipe thisClass._stream
 
       stat options.directory, (errStat, stats) ->

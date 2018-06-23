@@ -11,13 +11,15 @@ urls = [
   'http://codecguide.com/download_k-lite_codec_pack_mega.htm'
 ]
 
+getResponse = (obj) -> obj._scraper._cancellationParent._rejectionHandler0
+
 describe 'endl test #1', ->
   @timeout waitTime
 
   it 'should load page', (done) ->
     extractorInstance = endl.page(urls[0])
-    extractorInstance._scraper.onStatusCode (code) ->
-      expect(code).to.be.equal(200)
+    extractorInstance._scraper.then (res) ->
+      expect(getResponse(extractorInstance).statusCode).to.be.equal(200)
       done()
     null
 
@@ -31,10 +33,9 @@ describe 'endl test #1', ->
   it 'should resolve URL and download src', (done) ->
     extractorInstance = endl.page(urls[0])
     containerPromise = extractorInstance.find('#footer-copyrightico img')
-    containerPromise.then((container) ->
+    containerPromise.then (container) ->
       attrInstance = container.attr('src')
       attrInstance.download {filenameMode: {predefined: 'wikimedia.png'}, directory: tmpdir()}, -> done()
-    )
     null
 
 describe 'endl test #2', ->
@@ -81,7 +82,7 @@ describe 'endl test #4', ->
         container.page({ pageUrlAsReferrer: true })
           .find('a[href*="getmirror/k_lite_mega_codec_pack"]',
             (container) ->
-              referer = container._scraper.scraper.response.request.headers.referer
+              referer = getResponse(container).request.headers.referer.href
               if referer == urls[3]
                 done()
               else

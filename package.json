@@ -1,6 +1,6 @@
 {
   "name": "endl",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Easy-to-use link extractor and file downloader",
   "author": {
     "name": "Doğan Çelik",
@@ -36,7 +36,6 @@
     "adm-zip": "0.4.9",
     "bluebird": "^2.9.34",
     "cheerio": "^1.0.0-rc.2",
-    "coffee-script": "^1.9.2",
     "mime": "^1.3.4",
     "minimatch": "^2.0.4",
     "mkdirp": "^0.5.0",
@@ -50,7 +49,8 @@
     "yargs": "^3.8.0"
   },
   "devDependencies": {
-    "chai": "^3.2.0",
+    "chai": "^3.5.0",
+    "coffee-script": "^1.12.7",
     "mocha": "^4.1.0"
   }
 }
