@@ -10,8 +10,10 @@ mkdirp = require 'mkdirp'
 { execFile } = require 'child_process'
 Zip = require 'adm-zip'
 minimatch = require 'minimatch'
-bhttp = require 'bhttp'
 { EventEmitter } = require 'events'
+
+request = require 'request'
+progress = require 'request-progress'
 
 class File
   _getFullUrl: (from, to) -> url.resolve from, to
@@ -58,7 +60,7 @@ class File
     # else if options.filenameMode.contentDisposition is true
     filename
 
-  download: (options, callback) ->
+  download: (options, callbacks={}) ->
     thisClass = @
     downloadUrl = @_url
     type = typeof options
@@ -78,18 +80,19 @@ class File
 
     requestOptions = {
       headers: options.headers
-      stream: true
-      noDecode: true
+      encoding: null
     }
 
     if /^https?:/.test(downloadUrl) == false and @_pageUrl.length > 0 # url doesn't have domain
       downloadUrl = @_getFullUrl @_pageUrl, downloadUrl
 
+    requestOptions.url = downloadUrl
+
     if options.pageUrlAsReferrer is true
       requestOptions.headers.referer = if @_pageUrl then @_pageUrl else downloadUrl # good choice? prob not
 
-    downloadCallback = (err, response) ->
-      throw err if err
+    onResponse = (response) ->
+      response.pause() # https://github.com/request/request/issues/887#issuecomment-337424745
 
       contentType = response.headers['content-type']
       extension = thisClass._getExtension(contentType)
@@ -128,18 +131,20 @@ class File
           thisClass._downloadFinished = true
           thisClass._ee.emit 'finish'
         thisClass._ee.emit 'create'
-        File::_bindCallback response, callback, thisClass, callbackData
+        File::_bindCallback response, callbacks.end, thisClass, callbackData
         response.pipe thisClass._stream
 
-      stat options.directory, (err, stats) ->
-        if err and err.code == 'ENOENT'
+      stat options.directory, (errStat, stats) ->
+        if errStat and errStat.code == 'ENOENT'
           mkdirp options.directory, -> startDownload()
-        else if not err
+        else if not errStat
           startDownload()
         else
-          throw err
+          throw errStat
 
-    @_req = bhttp.get(downloadUrl, requestOptions, downloadCallback)
+    @_req = progress(request(requestOptions).on('response', onResponse))
+    @_req.on 'progress', callbacks.progress if typeof callbacks.progress == 'function'
+    @_req.on 'error', callbacks.error if typeof callbacks.error == 'function'
     @
 
   _getDefaultExtractOptions: ->
