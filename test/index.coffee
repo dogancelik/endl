@@ -11,15 +11,13 @@ urls = [
   'http://codecguide.com/download_k-lite_codec_pack_mega.htm'
 ]
 
-getResponse = (obj) -> obj._scraper._cancellationParent._rejectionHandler0
-
 describe 'endl test #1', ->
   @timeout waitTime
 
   it 'should load page', (done) ->
     extractorInstance = endl.page(urls[0])
     extractorInstance._scraper.then (res) ->
-      expect(getResponse(extractorInstance).statusCode).to.be.equal(200)
+      expect(res.statusCode).to.be.equal(200)
       done()
     null
 
@@ -78,14 +76,8 @@ describe 'endl test #4', ->
   it 'should use previousUrl', (done) ->
     endl.page(urls[3])
       .find('a[href^="http://www.majorgeeks.com/"]')
+      .then (container) -> container.page({ pageUrlAsReferrer: true }).find('a[href*="getmirror/k_lite_mega_codec_pack"]')
       .then (container) ->
-        container.page({ pageUrlAsReferrer: true })
-          .find('a[href*="getmirror/k_lite_mega_codec_pack"]',
-            (container) ->
-              referer = getResponse(container).request.headers.referer.href
-              if referer == urls[3]
-                done()
-              else
-                throw new Error "Referrer is not initial URL: #{referer}"
-          )
+        expect(container._response.referer).to.be.equal(container._finalUrl.href.replace('https:', 'http:'))
+        done()
     null

@@ -21,12 +21,14 @@ class Extractor
     @_scraper = getDocument
       uri: @_options.url
       headers: @_options.headers
+    .then (res) => @_response = res
 
   find: (query, callback) ->
     container = new Container(@_url, @_scraper, FindType.cheerio)
     thisClass = this
 
     thisClass._scraper.then (res) ->
+      container._response = thisClass._response
       container._find = res.$(query)
       container._finalUrl = res.finalUrl
       callback(container) if typeof callback == 'function'

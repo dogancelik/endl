@@ -5,7 +5,7 @@ cheerio = require 'cheerio'
 module.exports =
   preparePageOptions: (previousUrl, options) ->
     _extend { previousUrl: previousUrl }, options
-  
+
   FindType:
     jquery: 0
     qsa: 0
@@ -15,6 +15,8 @@ module.exports =
   getDocument: (options) ->
     options.resolveWithFullResponse = true
     rp(options).then (res) ->
+      statusCode: res.statusCode
+      referer: res.request.headers.referer
       finalUrl: res.request.uri
       body: res.body
       $: cheerio.load(res.body)

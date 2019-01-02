@@ -21,7 +21,7 @@ describe "parser 'extract' test", ->
 
   it 'should work', (done) ->
     endl.load join(__dirname, 'extract.json'), null, (extractData) ->
-      expect(extractData).to.be.an('array').that.have.deep.property('[0].from').that.is.a('string').that.contains('.png')
+      expect(extractData).to.be.an('array').that.have.nested.property('[0].from').that.is.a('string').that.contains('.png')
       done()
     null
 
