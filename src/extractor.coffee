@@ -1,7 +1,6 @@
 Container = require './container'
 xpath = require 'xpath'
 { DOMParser } = require 'xmldom'
-Promise = require 'bluebird'
 { FindType, getDocument } = require './util'
 { _extend } = require 'util'
 

@@ -44,8 +44,6 @@ Things to note:
 npm install endl
 ```
 
-Prerequisites: Tools for building NodeJS native modules (Visual Studio or [Visual Studio Express](https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx))
-
 ## How do you pronounce *endl*?
 Like *Handel* the composer, but without the *h* → *andel* :)
 

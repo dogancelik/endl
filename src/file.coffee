@@ -43,7 +43,7 @@ class File
 
   _getExtension: (contentType) ->
     if contentType?
-      extension = mime.extension(contentType)
+      extension = mime.getExtension(contentType)
       if extension?
         extension = ".#{extension}"
     extension
